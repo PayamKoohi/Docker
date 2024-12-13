@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  iperf-server:
+    image: networkstatic/iperf3
+    container_name: iperf-server
+    command: -s
+    networks:
+      iperf-net:
+        ipv4_address: 192.168.1.10
+
+  iperf-client:
+    image: networkstatic/iperf3
+    container_name: iperf-client
+    depends_on:
+      - iperf-server
+    command: -c 192.168.1.10
+    networks:
+      iperf-net:
+        ipv4_address: 192.168.1.20
+
+networks:
+  iperf-net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 192.168.1.0/24
+
